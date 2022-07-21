@@ -4,7 +4,9 @@ const { check } = require('express-validator')
 const {
   apiGetEntidades,
   apiGetEntidadById,
-  apiAddEntidad
+  apiAddEntidad,
+  apiUpdateEntidad,
+  apiDeleteEntidad
 } = require('./controllers/entidadController')
 
 // habilitando cors
@@ -38,5 +40,25 @@ apiRouter.post(
   ],
   apiAddEntidad
 )
+apiRouter.put(
+  '/entidades/:id',
+  [
+    check('entidad_nombre', 'El nombre es obligatorio')
+      .not()
+      .isEmpty()
+      .isString()
+      .withMessage('El nombre de la entidad debe ser un string')
+      .toUpperCase(),
+    check('tipo_entidad', 'El tipo de entidad es obligatorio')
+      .not()
+      .isEmpty()
+      .isNumeric()
+      .withMessage('El tipo de entidad debe ser numérico')
+      .toInt()
+  ],
+  apiUpdateEntidad
+)
+
+apiRouter.delete('/entidades/:id', apiDeleteEntidad)
 
 module.exports = apiRouter

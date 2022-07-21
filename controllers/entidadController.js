@@ -35,3 +35,29 @@ exports.apiAddEntidad = async function (req, res) {
     console.log(error)
   }
 }
+
+exports.apiUpdateEntidad = async function (req, res) {
+  const errores = validationResult(req)
+  if (!errores.isEmpty()) {
+    return res.status(400).json({
+      errores: errores.array()
+    })
+  }
+  try {
+    let respuesta = await new Entidad(req.body).updateEntidad(req.params)
+    res.json(respuesta)
+  } catch (error) {
+    res.status(500).send(error.detail)
+    console.log(error)
+  }
+}
+
+exports.apiDeleteEntidad = async function (req, res) {
+  try {
+    let respuesta = await Entidad.deleteEntidad(req.params)
+    res.json(respuesta)
+  } catch (error) {
+    res.status(500).send(error.detail)
+    console.log(error)
+  }
+}
