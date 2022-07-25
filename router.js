@@ -1,5 +1,6 @@
 const apiRouter = require('express').Router()
 const cors = require('cors')
+const fs = require('fs')
 const { check } = require('express-validator')
 const {
   apiGetEntidades,
@@ -60,5 +61,13 @@ apiRouter.put(
 )
 
 apiRouter.delete('/entidades/:id', apiDeleteEntidad)
+
+apiRouter.get('/:pdf', function (req, res) {
+  let tempFile = `./uploads/${req.params.pdf}.pdf`
+  fs.readFile(tempFile, function (err, data) {
+    res.contentType('application/pdf')
+    res.send(data)
+  })
+})
 
 module.exports = apiRouter
