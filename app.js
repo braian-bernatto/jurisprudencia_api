@@ -1,18 +1,14 @@
 const express = require('express')
 const app = express()
-const cors = require('cors')
 const dotenv = require('dotenv')
 dotenv.config()
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use(
-  cors({
-    origin: '*'
-  })
-)
 
 app.use('/', require('./router'))
+app.use('/entidades', require('./routes/entidades'))
+app.use('/upload', require('./routes/upload'))
 
 const server = require('http').createServer(app)
 
