@@ -7,11 +7,13 @@ const {
   apiUpdateEntidad,
   apiDeleteEntidad
 } = require('../controllers/entidadController')
+const auth = require('../middlewares/auth')
 
 apiRouter.get('/', apiGetEntidades)
 apiRouter.get('/:id', apiGetEntidadById)
 apiRouter.post(
   '/',
+  auth,
   [
     check('entidad_nombre', 'El nombre es obligatorio')
       .not()
@@ -30,6 +32,7 @@ apiRouter.post(
 )
 apiRouter.put(
   '/:id',
+  auth,
   [
     check('entidad_nombre', 'El nombre es obligatorio')
       .not()
@@ -47,6 +50,6 @@ apiRouter.put(
   apiUpdateEntidad
 )
 
-apiRouter.delete('/:id', apiDeleteEntidad)
+apiRouter.delete('/:id', auth, apiDeleteEntidad)
 
 module.exports = apiRouter

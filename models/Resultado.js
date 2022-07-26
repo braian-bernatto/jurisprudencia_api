@@ -1,36 +1,19 @@
 const pool = require('../db')
 
-const Entidad = function (data) {
+const Resultado = function (data) {
   this.data = data
   this.errors = []
 }
 
-Entidad.allEntidades = async function () {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let resultado = await pool.query(`SELECT * FROM ENTIDAD ORDER BY 1 DESC`)
-
-      if (resultado.length) {
-        let datos = new Entidad(resultado)
-        resolve(datos)
-      } else {
-        reject()
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  })
-}
-
-Entidad.entidadById = async function ({ id }) {
+Resultado.allResultados = async function () {
   return new Promise(async (resolve, reject) => {
     try {
       let resultado = await pool.query(
-        `SELECT * FROM ENTIDAD WHERE ENTIDAD_ID = ${id}`
+        `SELECT * FROM Resultado ORDER BY 1 DESC`
       )
 
       if (resultado.length) {
-        let datos = new Entidad(resultado)
+        let datos = new Resultado(resultado)
         resolve(datos)
       } else {
         reject()
@@ -41,15 +24,34 @@ Entidad.entidadById = async function ({ id }) {
   })
 }
 
-Entidad.prototype.addEntidad = async function () {
-  const { entidad_nombre, tipo_entidad } = this.data
+Resultado.ResultadoById = async function ({ id }) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let resultado = await pool.query(
+        `SELECT * FROM Resultado WHERE Resultado_ID = ${id}`
+      )
+
+      if (resultado.length) {
+        let datos = new Resultado(resultado)
+        resolve(datos)
+      } else {
+        reject()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
+Resultado.prototype.addResultado = async function () {
+  const { resultado_descri } = this.data
 
   // only if there are no errors proceedo to save into the database
   return new Promise(async (resolve, reject) => {
     if (!this.errors.length) {
       try {
         let resultado = await pool.query(
-          `INSERT INTO entidad(entidad_nombre, tipo_entidad_id) VALUES ('${entidad_nombre}', ${tipo_entidad}) returning entidad_id`
+          `INSERT INTO Resultado(resultado_descri) VALUES ('${resultado_descri}') returning Resultado_id`
         )
         resolve(resultado)
       } catch (error) {
@@ -61,13 +63,13 @@ Entidad.prototype.addEntidad = async function () {
   })
 }
 
-Entidad.prototype.updateEntidad = async function ({ id }) {
-  const { entidad_nombre, tipo_entidad } = this.data
+Resultado.prototype.updateResultado = async function ({ id }) {
+  const { resultado_descri } = this.data
   return new Promise(async (resolve, reject) => {
     if (!this.errors.length) {
       try {
         let resultado = await pool.query(`
-          UPDATE entidad SET entidad_nombre='${entidad_nombre}', tipo_entidad_id=${tipo_entidad} WHERE entidad_id=${id} returning entidad_id
+          UPDATE Resultado SET resultado_descri='${resultado_descri}' WHERE resultado_id=${id} returning resultado_id
         `)
         resolve(resultado)
       } catch (error) {
@@ -79,11 +81,11 @@ Entidad.prototype.updateEntidad = async function ({ id }) {
   })
 }
 
-Entidad.deleteEntidad = function ({ id }) {
+Resultado.deleteResultado = function ({ id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let respuesta = await pool.query(
-        `DELETE FROM entidad where entidad_id=${id} returning entidad_id`
+        `DELETE FROM Resultado where Resultado_id=${id} returning Resultado_id`
       )
       resolve(respuesta)
     } catch (error) {
@@ -92,4 +94,4 @@ Entidad.deleteEntidad = function ({ id }) {
   })
 }
 
-module.exports = Entidad
+module.exports = Resultado

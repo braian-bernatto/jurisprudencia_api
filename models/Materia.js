@@ -1,17 +1,17 @@
 const pool = require('../db')
 
-const Entidad = function (data) {
+const Materia = function (data) {
   this.data = data
   this.errors = []
 }
 
-Entidad.allEntidades = async function () {
+Materia.allMaterias = async function () {
   return new Promise(async (resolve, reject) => {
     try {
-      let resultado = await pool.query(`SELECT * FROM ENTIDAD ORDER BY 1 DESC`)
+      let resultado = await pool.query(`SELECT * FROM Materia ORDER BY 1 DESC`)
 
       if (resultado.length) {
-        let datos = new Entidad(resultado)
+        let datos = new Materia(resultado)
         resolve(datos)
       } else {
         reject()
@@ -22,15 +22,15 @@ Entidad.allEntidades = async function () {
   })
 }
 
-Entidad.entidadById = async function ({ id }) {
+Materia.MateriaById = async function ({ id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let resultado = await pool.query(
-        `SELECT * FROM ENTIDAD WHERE ENTIDAD_ID = ${id}`
+        `SELECT * FROM MATERIA WHERE MATERIA_ID = ${id}`
       )
 
       if (resultado.length) {
-        let datos = new Entidad(resultado)
+        let datos = new Materia(resultado)
         resolve(datos)
       } else {
         reject()
@@ -41,15 +41,15 @@ Entidad.entidadById = async function ({ id }) {
   })
 }
 
-Entidad.prototype.addEntidad = async function () {
-  const { entidad_nombre, tipo_entidad } = this.data
+Materia.prototype.addMateria = async function () {
+  const { materia_nombre } = this.data
 
   // only if there are no errors proceedo to save into the database
   return new Promise(async (resolve, reject) => {
     if (!this.errors.length) {
       try {
         let resultado = await pool.query(
-          `INSERT INTO entidad(entidad_nombre, tipo_entidad_id) VALUES ('${entidad_nombre}', ${tipo_entidad}) returning entidad_id`
+          `INSERT INTO Materia(Materia_nombre) VALUES ('${materia_nombre}') returning Materia_id`
         )
         resolve(resultado)
       } catch (error) {
@@ -61,13 +61,13 @@ Entidad.prototype.addEntidad = async function () {
   })
 }
 
-Entidad.prototype.updateEntidad = async function ({ id }) {
-  const { entidad_nombre, tipo_entidad } = this.data
+Materia.prototype.updateMateria = async function ({ id }) {
+  const { materia_nombre } = this.data
   return new Promise(async (resolve, reject) => {
     if (!this.errors.length) {
       try {
         let resultado = await pool.query(`
-          UPDATE entidad SET entidad_nombre='${entidad_nombre}', tipo_entidad_id=${tipo_entidad} WHERE entidad_id=${id} returning entidad_id
+          UPDATE Materia SET materia_nombre='${materia_nombre}' WHERE materia_id=${id} returning returning materia_id
         `)
         resolve(resultado)
       } catch (error) {
@@ -79,11 +79,11 @@ Entidad.prototype.updateEntidad = async function ({ id }) {
   })
 }
 
-Entidad.deleteEntidad = function ({ id }) {
+Materia.deleteMateria = function ({ id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let respuesta = await pool.query(
-        `DELETE FROM entidad where entidad_id=${id} returning entidad_id`
+        `DELETE FROM Materia where Materia_id=${id} returning Materia_id`
       )
       resolve(respuesta)
     } catch (error) {
@@ -92,4 +92,4 @@ Entidad.deleteEntidad = function ({ id }) {
   })
 }
 
-module.exports = Entidad
+module.exports = Materia

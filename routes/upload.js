@@ -1,6 +1,7 @@
 const apiRouter = require('express').Router()
 const fs = require('fs')
 const multer = require('multer')
+const auth = require('../middlewares/auth')
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/')
@@ -19,7 +20,7 @@ apiRouter.get('/:pdf', function (req, res) {
   })
 })
 
-apiRouter.post('/', uploadStorage.array('file', 10), (req, res) => {
+apiRouter.post('/', auth, uploadStorage.array('file', 10), (req, res) => {
   return res.send({ success: true })
 })
 
