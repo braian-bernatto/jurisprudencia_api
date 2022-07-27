@@ -18,6 +18,7 @@ app.use('/funcionarios', require('./routes/funcionarios'))
 app.use('/miembros', require('./routes/miembros'))
 app.use('/secretarias', require('./routes/secretarias'))
 app.use('/expedientes', require('./routes/expedientes'))
+app.use('/resoluciones', require('./routes/resoluciones'))
 app.use('/tipo-entidad', require('./routes/tipo-entidad'))
 app.use('/tipo-resolucion', require('./routes/tipo-resolucion'))
 
