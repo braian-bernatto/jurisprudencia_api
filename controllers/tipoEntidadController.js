@@ -6,7 +6,7 @@ exports.apiGetTipoEntidades = async function (req, res) {
     let respuesta = await TipoEntidad.allTipoEntidades()
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -16,7 +16,7 @@ exports.apiGetTipoEntidadById = async function (req, res) {
     let respuesta = await TipoEntidad.TipoEntidadById(req.params)
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -31,7 +31,7 @@ exports.apiAddTipoEntidad = async function (req, res) {
     let respuesta = await new TipoEntidad(req.body).addTipoEntidad()
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -49,7 +49,7 @@ exports.apiUpdateTipoEntidad = async function (req, res) {
     )
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -59,7 +59,7 @@ exports.apiDeleteTipoEntidad = async function (req, res) {
     let respuesta = await TipoEntidad.deleteTipoEntidad(req.params)
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }

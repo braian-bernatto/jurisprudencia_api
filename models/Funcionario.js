@@ -1,36 +1,19 @@
 const pool = require('../db')
 
-const Materia = function (data) {
+const Funcionario = function (data) {
   this.data = data
   this.errors = []
 }
 
-Materia.allMaterias = async function () {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let resultado = await pool.query(`SELECT * FROM Materia ORDER BY 1 DESC`)
-
-      if (resultado.length) {
-        let datos = new Materia(resultado)
-        resolve(datos)
-      } else {
-        reject()
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  })
-}
-
-Materia.MateriaById = async function ({ id }) {
+Funcionario.allFuncionarios = async function () {
   return new Promise(async (resolve, reject) => {
     try {
       let resultado = await pool.query(
-        `SELECT * FROM MATERIA WHERE MATERIA_ID = ${id}`
+        `SELECT * FROM Funcionario NATURAL JOIN PERSONA NATURAL JOIN CARGO ORDER BY 1 DESC`
       )
 
       if (resultado.length) {
-        let datos = new Materia(resultado)
+        let datos = new Funcionario(resultado)
         resolve(datos)
       } else {
         reject()
@@ -41,15 +24,34 @@ Materia.MateriaById = async function ({ id }) {
   })
 }
 
-Materia.prototype.addMateria = async function () {
-  const { materia_nombre } = this.data
+Funcionario.FuncionarioById = async function ({ cargo, persona }) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let resultado = await pool.query(
+        `SELECT * FROM Funcionario NATURAL JOIN PERSONA NATURAL JOIN CARGO WHERE cargo_id=${cargo} and persona_id=${persona} `
+      )
+
+      if (resultado.length) {
+        let datos = new Funcionario(resultado)
+        resolve(datos)
+      } else {
+        reject()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
+Funcionario.prototype.addFuncionario = async function () {
+  const { cargo_id, persona_id, funcionario_activo } = this.data
 
   // only if there are no errors proceedo to save into the database
   return new Promise(async (resolve, reject) => {
     if (!this.errors.length) {
       try {
         let resultado = await pool.query(
-          `INSERT INTO Materia(Materia_nombre) VALUES ('${materia_nombre}') returning Materia_id`
+          `INSERT INTO Funcionario(cargo_id, persona_id, funcionario_activo) VALUES (${cargo_id},${persona_id},${funcionario_activo}) returning persona_id`
         )
         resolve(resultado)
       } catch (error) {
@@ -61,13 +63,13 @@ Materia.prototype.addMateria = async function () {
   })
 }
 
-Materia.prototype.updateMateria = async function ({ id }) {
-  const { materia_nombre } = this.data
+Funcionario.prototype.updateFuncionario = async function ({ persona, cargo }) {
+  const { funcionario_activo } = this.data
   return new Promise(async (resolve, reject) => {
     if (!this.errors.length) {
       try {
         let resultado = await pool.query(`
-          UPDATE Materia SET materia_nombre='${materia_nombre}' WHERE materia_id=${id} returning materia_id
+          UPDATE Funcionario SET funcionario_activo=${funcionario_activo} WHERE cargo_id=${cargo} and persona_id=${persona} returning persona_id
         `)
         resolve(resultado)
       } catch (error) {
@@ -79,11 +81,11 @@ Materia.prototype.updateMateria = async function ({ id }) {
   })
 }
 
-Materia.deleteMateria = function ({ id }) {
+Funcionario.deleteFuncionario = function ({ persona, cargo }) {
   return new Promise(async (resolve, reject) => {
     try {
       let respuesta = await pool.query(
-        `DELETE FROM Materia where Materia_id=${id} returning Materia_id`
+        `DELETE FROM Funcionario WHERE cargo_id=${cargo} and persona_id=${persona} returning persona_id`
       )
       resolve(respuesta)
     } catch (error) {
@@ -92,4 +94,4 @@ Materia.deleteMateria = function ({ id }) {
   })
 }
 
-module.exports = Materia
+module.exports = Funcionario

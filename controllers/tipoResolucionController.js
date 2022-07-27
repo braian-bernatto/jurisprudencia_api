@@ -6,7 +6,7 @@ exports.apiGetTipoResoluciones = async function (req, res) {
     let respuesta = await TipoResolucion.allTipoResoluciones()
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -16,7 +16,7 @@ exports.apiGetTipoResolucionById = async function (req, res) {
     let respuesta = await TipoResolucion.TipoResolucionById(req.params)
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -31,7 +31,7 @@ exports.apiAddTipoResolucion = async function (req, res) {
     let respuesta = await new TipoResolucion(req.body).addTipoResolucion()
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -49,7 +49,7 @@ exports.apiUpdateTipoResolucion = async function (req, res) {
     )
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -59,7 +59,7 @@ exports.apiDeleteTipoResolucion = async function (req, res) {
     let respuesta = await TipoResolucion.deleteTipoResolucion(req.params)
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }

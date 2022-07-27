@@ -6,7 +6,7 @@ exports.apiGetCargos = async function (req, res) {
     let respuesta = await Cargo.allCargos()
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -16,7 +16,7 @@ exports.apiGetCargoById = async function (req, res) {
     let respuesta = await Cargo.CargoById(req.params)
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -31,7 +31,7 @@ exports.apiAddCargo = async function (req, res) {
     let respuesta = await new Cargo(req.body).addCargo()
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -47,7 +47,7 @@ exports.apiUpdateCargo = async function (req, res) {
     let respuesta = await new Cargo(req.body).updateCargo(req.params)
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }
@@ -57,7 +57,7 @@ exports.apiDeleteCargo = async function (req, res) {
     let respuesta = await Cargo.deleteCargo(req.params)
     res.json(respuesta)
   } catch (error) {
-    res.status(500).send(error.detail)
+    res.status(500).send(error)
     console.log(error)
   }
 }

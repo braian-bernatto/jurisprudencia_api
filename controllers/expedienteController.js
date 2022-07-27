@@ -1,9 +1,9 @@
-const Materia = require('../models/Materia')
+const Expediente = require('../models/Expediente')
 const { validationResult } = require('express-validator')
 
-exports.apiGetMaterias = async function (req, res) {
+exports.apiGetExpedientes = async function (req, res) {
   try {
-    let respuesta = await Materia.allMaterias()
+    let respuesta = await Expediente.allExpedientes()
     res.json(respuesta)
   } catch (error) {
     res.status(500).send(error)
@@ -11,9 +11,9 @@ exports.apiGetMaterias = async function (req, res) {
   }
 }
 
-exports.apiGetMateriaById = async function (req, res) {
+exports.apiGetExpedienteById = async function (req, res) {
   try {
-    let respuesta = await Materia.MateriaById(req.params)
+    let respuesta = await Expediente.ExpedienteById(req.params)
     res.json(respuesta)
   } catch (error) {
     res.status(500).send(error)
@@ -21,14 +21,14 @@ exports.apiGetMateriaById = async function (req, res) {
   }
 }
 
-exports.apiAddMateria = async function (req, res) {
+exports.apiAddExpediente = async function (req, res) {
   // revisar si hay errores
   const errores = validationResult(req)
   if (!errores.isEmpty()) {
     return res.status(400).json({ errores: errores.array() })
   }
   try {
-    let respuesta = await new Materia(req.body).addMateria()
+    let respuesta = await new Expediente(req.body).addExpediente()
     res.json(respuesta)
   } catch (error) {
     res.status(500).send(error)
@@ -36,7 +36,7 @@ exports.apiAddMateria = async function (req, res) {
   }
 }
 
-exports.apiUpdateMateria = async function (req, res) {
+exports.apiUpdateExpediente = async function (req, res) {
   const errores = validationResult(req)
   if (!errores.isEmpty()) {
     return res.status(400).json({
@@ -44,7 +44,7 @@ exports.apiUpdateMateria = async function (req, res) {
     })
   }
   try {
-    let respuesta = await new Materia(req.body).updateMateria(req.params)
+    let respuesta = await new Expediente(req.body).updateExpediente(req.params)
     res.json(respuesta)
   } catch (error) {
     res.status(500).send(error)
@@ -52,9 +52,9 @@ exports.apiUpdateMateria = async function (req, res) {
   }
 }
 
-exports.apiDeleteMateria = async function (req, res) {
+exports.apiDeleteExpediente = async function (req, res) {
   try {
-    let respuesta = await Materia.deleteMateria(req.params)
+    let respuesta = await Expediente.deleteExpediente(req.params)
     res.json(respuesta)
   } catch (error) {
     res.status(500).send(error)
