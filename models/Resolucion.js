@@ -14,6 +14,8 @@ Resolucion.allResoluciones = async function () {
         NATURAL JOIN ENTIDAD
         NATURAL JOIN RESULTADO
         NATURAL JOIN TIPO_RESOLUCION
+        NATURAL JOIN SECRETARIA
+        NATURAL JOIN MATERIA
         NATURAL JOIN EXPEDIENTE ORDER BY 1 DESC`
         )
 
@@ -45,10 +47,17 @@ Resolucion.allResoluciones = async function () {
               )
 
               res.personas = personas
+
+              let obj = personas.find(
+                item => item.resolucion_detalle_preopinante === true
+              )
+              let index = personas.indexOf(obj)
+
+              res.preopinante = `${personas[index].persona_nombre} ${personas[index].persona_apellido}`
+
               return await res
             })
           )
-          console.log(resultadoV2)
 
           let datos = new Resolucion(resultadoV2)
           resolve(datos)
@@ -79,7 +88,7 @@ Resolucion.resolucionById = async function ({
         NATURAL JOIN ENTIDAD
         NATURAL JOIN RESULTADO
         NATURAL JOIN TIPO_RESOLUCION
-        NATURAL JOIN EXPEDIENTE 
+        NATURAL JOIN EXPEDIENTE       
         WHERE         
         tipo_resolucion_id = ${tipo} AND resolucion_year = ${year} AND
         resolucion_nro = '${nro}' AND 
