@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 const uploadStorage = multer({ storage: storage })
 
 apiRouter.get('/:pdf', function (req, res) {
-  let tempFile = `./uploads/${req.params.pdf}.pdf`
+  let tempFile = `./uploads/${req.params.pdf}`
   fs.readFile(tempFile, function (err, data) {
     res.contentType('application/pdf')
     res.send(data)
