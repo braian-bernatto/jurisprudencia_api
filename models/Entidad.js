@@ -8,14 +8,43 @@ const Entidad = function (data) {
 Entidad.allEntidades = async function () {
   return new Promise(async (resolve, reject) => {
     try {
-      let resultado = await pool.query(`SELECT * FROM ENTIDAD ORDER BY 1 DESC`)
+      pool.task(async t => {
+        let resultado = await t.query(
+          `SELECT * FROM ENTIDAD NATURAL JOIN TIPO_ENTIDAD ORDER BY 1`
+        )
 
-      if (resultado.length) {
-        let datos = new Entidad(resultado)
-        resolve(datos)
-      } else {
-        reject()
-      }
+        if (resultado.length) {
+          let resultadoV2 = await Promise.all(
+            resultado.map(async res => {
+              let miembros = await t.query(
+                `SELECT 
+                PERSONA_ID,
+                PERSONA_CI,
+                PERSONA_NOMBRE,
+                PERSONA_APELLIDO,
+                PERSONA_TELEFONO,
+                PERSONA_CORREO,
+                CARGO_DESCRI
+                FROM ENTIDAD 
+                NATURAL JOIN MIEMBRO
+                NATURAL JOIN CARGO
+                NATURAL JOIN PERSONA
+                WHERE 
+                ENTIDAD_ID = ${res.entidad_id}`
+              )
+
+              res.miembros = miembros
+
+              return await res
+            })
+          )
+
+          let datos = new Entidad(resultadoV2)
+          resolve(datos)
+        } else {
+          reject()
+        }
+      })
     } catch (error) {
       console.log(error)
     }

@@ -8,7 +8,7 @@ const TipoEntidad = function (data) {
 TipoEntidad.allTipoEntidades = async function () {
   return new Promise(async (resolve, reject) => {
     try {
-      let tipo = await pool.query(`SELECT * FROM tipo_entidad ORDER BY 1 DESC`)
+      let tipo = await pool.query(`SELECT * FROM tipo_entidad ORDER BY 1`)
 
       if (tipo.length) {
         let datos = new TipoEntidad(tipo)
