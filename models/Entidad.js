@@ -18,6 +18,7 @@ Entidad.allEntidades = async function () {
             resultado.map(async res => {
               let miembros = await t.query(
                 `SELECT 
+                CARGO_ID,
                 PERSONA_ID,
                 PERSONA_CI,
                 PERSONA_NOMBRE,
@@ -30,7 +31,7 @@ Entidad.allEntidades = async function () {
                 NATURAL JOIN CARGO
                 NATURAL JOIN PERSONA
                 WHERE 
-                ENTIDAD_ID = ${res.entidad_id}`
+                ENTIDAD_ID = ${res.entidad_id} ORDER BY 1`
               )
 
               res.miembros = miembros
