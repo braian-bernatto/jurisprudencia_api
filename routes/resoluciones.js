@@ -5,11 +5,13 @@ const {
   apiGetResolucionById,
   apiAddResolucion,
   apiUpdateResolucion,
-  apiDeleteResolucion
+  apiDeleteResolucion,
+  apiGetResolucionesBySearch
 } = require('../controllers/resolucionController')
 const auth = require('../middlewares/auth')
 
 apiRouter.get('/', apiGetResoluciones)
+apiRouter.post('/search', apiGetResolucionesBySearch)
 apiRouter.get(
   '/:nro/:year/:tipo/:expediente_nro/:expediente_year/:tomo/:entidad',
   apiGetResolucionById

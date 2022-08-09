@@ -11,6 +11,16 @@ exports.apiGetResoluciones = async function (req, res) {
   }
 }
 
+exports.apiGetResolucionesBySearch = async function (req, res) {
+  try {
+    let respuesta = await Resolucion.resolucionBySearch(req.body)
+    res.json(respuesta)
+  } catch (error) {
+    res.status(500).send(error)
+    console.log(error)
+  }
+}
+
 exports.apiGetResolucionById = async function (req, res) {
   try {
     let respuesta = await Resolucion.resolucionById(req.params)

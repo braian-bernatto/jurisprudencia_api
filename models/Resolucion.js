@@ -71,6 +71,94 @@ Resolucion.allResoluciones = async function () {
   })
 }
 
+Resolucion.resolucionBySearch = async function ({
+  text,
+  resNro,
+  resYear,
+  resTipo
+}) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      pool.task(async t => {
+        let resultado = await t.query(
+          `SELECT * FROM RESOLUCION
+        NATURAL JOIN ENTIDAD
+        NATURAL JOIN RESULTADO
+        NATURAL JOIN TIPO_RESOLUCION
+        NATURAL JOIN SECRETARIA
+        NATURAL JOIN MATERIA
+        NATURAL JOIN EXPEDIENTE
+        WHERE
+
+        expediente_nro::text || ' ' || 
+        expediente_year::text || ' ' || 
+        resolucion_accion_resuelta || ' ' || 
+        entidad_nombre || ' ' || 
+        resultado_descri || ' ' || 
+        expediente_caratula || ' ' || 
+        expediente_observacion
+
+        ilike '%${text ? text : ''}%' 
+        
+        ${resNro ? `AND resolucion_nro = '${resNro}'` : ''} 
+        ${resYear ? `AND resolucion_year = ${resYear}` : ''} 
+        ${resTipo ? `AND tipo_resolucion_id = ${resTipo}` : ''} 
+
+        ORDER BY 1 DESC`
+        )
+
+        if (resultado.length) {
+          let resultadoV2 = await Promise.all(
+            resultado.map(async res => {
+              let personas = await t.query(
+                `SELECT 
+                PERSONA_ID,
+                PERSONA_CI,
+                PERSONA_NOMBRE,
+                PERSONA_APELLIDO,
+                PERSONA_TELEFONO,
+                PERSONA_CORREO,
+                CARGO_ID,
+                RESOLUCION_DETALLE_PREOPINANTE,
+                RESOLUCION_DETALLE_OBSERVACION
+                FROM RESOLUCION
+                NATURAL JOIN RESOLUCION_DETALLE
+                NATURAL JOIN PERSONA
+                WHERE 
+                tipo_resolucion_id = ${res.tipo_resolucion_id} AND 
+                resolucion_year = ${res.resolucion_year} AND 
+                resolucion_nro = '${res.resolucion_nro}' AND 
+                entidad_id = ${res.entidad_id} AND 
+                expediente_nro = ${res.expediente_nro} AND 
+                expediente_year = ${res.expediente_year} AND 
+                expediente_tomo = ${res.expediente_tomo}`
+              )
+
+              res.personas = personas
+
+              let obj = personas.find(
+                item => item.resolucion_detalle_preopinante === true
+              )
+              let index = personas.indexOf(obj)
+
+              res.preopinante = `${personas[index].persona_nombre} ${personas[index].persona_apellido}`
+
+              return await res
+            })
+          )
+
+          let datos = new Resolucion(resultadoV2)
+          resolve(datos)
+        } else {
+          reject()
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
 Resolucion.resolucionById = async function ({
   nro,
   year,
@@ -134,7 +222,6 @@ Resolucion.resolucionById = async function ({
     }
   })
 }
-
 Resolucion.prototype.addResolucion = async function () {
   const {
     resolucion_nro,
